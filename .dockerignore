@@ -1,0 +1,25 @@
+.git
+.DS_Store
+
+# Mac / Local build artifacts in whisper.cpp
+whisper.cpp/build/
+whisper.cpp/build-*/
+whisper.cpp/build_*/
+whisper.cpp/CMakeFiles/
+whisper.cpp/CMakeCache.txt
+
+# Python cache & virtualenvs
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Node / Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/public/uploads/*
+!frontend/public/uploads/.gitkeep

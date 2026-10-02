@@ -10,8 +10,8 @@ logger = logging.getLogger("wavepipe.whisper")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 WHISPER_DIR = os.path.abspath(os.path.join(BASE_DIR, "../whisper.cpp"))
-WHISPER_EXECUTABLE = os.path.join(WHISPER_DIR, "build/bin/whisper-cli")
-DEFAULT_MODEL_PATH = os.path.join(WHISPER_DIR, "models/ggml-base.en.bin")
+WHISPER_EXECUTABLE = os.getenv("WHISPER_EXECUTABLE", os.path.join(WHISPER_DIR, "build/bin/whisper-cli"))
+DEFAULT_MODEL_PATH = os.getenv("WHISPER_MODEL_PATH", os.path.join(WHISPER_DIR, "models/ggml-base.en.bin"))
 
 def format_timestamp(ts_str: str) -> str:
     """

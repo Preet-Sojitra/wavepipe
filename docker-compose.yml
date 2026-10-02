@@ -1,0 +1,50 @@
+# =============================================================
+# WavePipe Docker Compose
+# 
+# Uses your existing host postgres (my-postgres) + redis containers
+# via host.docker.internal — no port conflicts, no duplication.
+# =============================================================
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: wavepipe-frontend
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+      # Points to your existing host postgres container
+      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@host.docker.internal:5432/${POSTGRES_DB:-mydb}
+      # Points to your existing host redis container
+      REDIS_URL: redis://host.docker.internal:6379
+      QUEUE_NAME: wavepipe:jobs:transcribe
+      JWT_SECRET: ${JWT_SECRET:-wavepipe_production_secret_key_change_in_prod}
+    volumes:
+      - shared_uploads:/app/public/uploads
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker/Dockerfile
+    container_name: wavepipe-worker
+    restart: unless-stopped
+    environment:
+      # Points to your existing host postgres container
+      DATABASE_URL: postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-admin}@host.docker.internal:5432/${POSTGRES_DB:-mydb}
+      # Points to your existing host redis container
+      REDIS_URL: redis://host.docker.internal:6379
+      QUEUE_NAME: wavepipe:jobs:transcribe
+      WHISPER_EXECUTABLE: /usr/local/bin/whisper-cli
+      WHISPER_MODEL_PATH: /app/models/ggml-base.en.bin
+    volumes:
+      - shared_uploads:/app/public/uploads
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  shared_uploads:
