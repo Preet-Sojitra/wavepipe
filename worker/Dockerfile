@@ -36,9 +36,10 @@ WORKDIR /app
 # Copy whisper binary from builder
 COPY --from=builder /whisper.cpp/build/bin/whisper-cli /usr/local/bin/whisper-cli
 
-# Copy model weights
-RUN mkdir -p /app/models
-COPY whisper.cpp/models/ggml-base.en.bin /app/models/ggml-base.en.bin
+# Download whisper base.en model weights (works cleanly on fresh clones where .bin is gitignored)
+RUN mkdir -p /app/models && \
+    curl -L -o /app/models/ggml-base.en.bin \
+    https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
 
 # Install CPU PyTorch first (much smaller than CUDA PyTorch ~300MB vs 3GB)
 RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
