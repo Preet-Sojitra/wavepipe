@@ -33,7 +33,8 @@ WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000 \
-    HOSTNAME="0.0.0.0"
+    HOSTNAME="0.0.0.0" \
+    NODE_PATH="/usr/local/lib/node_modules"
 
 RUN apk add --no-cache libc6-compat openssl
 RUN npm install -g prisma@7.9.1
