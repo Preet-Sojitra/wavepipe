@@ -73,7 +73,7 @@ export default function DashboardPage() {
   const [selectedJob, setSelectedJob] = useState<MockJob | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [jobs, setJobs] = useState<MockJob[]>(INITIAL_MOCK_JOBS);
+  const [jobs, setJobs] = useState<MockJob[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchJobs = useCallback(async () => {
@@ -126,7 +126,8 @@ export default function DashboardPage() {
             };
           });
           setJobs(formatted);
-          return;
+        } else {
+          setJobs([]);
         }
       }
     } catch (err) {
