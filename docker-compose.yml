@@ -7,6 +7,9 @@ services:
     image: postgres:16-alpine
     container_name: wavepipe-postgres
     restart: unless-stopped
+    ports:
+      # Expose only to EC2 localhost (accessible via SSH tunnel, invisible to public internet)
+      - "127.0.0.1:5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-admin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wavepipe_secure_password_123}
