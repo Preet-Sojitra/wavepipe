@@ -36,6 +36,7 @@ ENV NODE_ENV=production \
     HOSTNAME="0.0.0.0"
 
 RUN apk add --no-cache libc6-compat openssl
+RUN npm install -g prisma@7.9.1
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
@@ -47,9 +48,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Copy prisma schema + migrations for migrate deploy at startup
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 
 # Copy startup script
 COPY --chown=nextjs:nodejs startup.sh ./startup.sh
