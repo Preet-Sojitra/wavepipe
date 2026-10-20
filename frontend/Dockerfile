@@ -13,16 +13,16 @@ COPY prisma ./prisma/
 # Install all dependencies (including devDependencies for build)
 RUN pnpm install --frozen-lockfile
 
+# Set dummy DATABASE_URL for build-time prisma generation & Next.js static evaluation
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    NODE_ENV=production \
+    DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
 # Generate Prisma client
 RUN pnpm run db:generate
 
 # Copy source code and build Next.js
 COPY . .
-
-# Set dummy DATABASE_URL for build-time static evaluation
-ENV NEXT_TELEMETRY_DISABLED=1 \
-    NODE_ENV=production \
-    DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
 
 RUN pnpm run build
 
